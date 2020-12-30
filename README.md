@@ -251,3 +251,5 @@ After compiling, execute the `unittest` main executable:
 `./cmake-build-debug/test/unittest`
 
 And hope for exit code 0!
+
+Test
