@@ -3,7 +3,7 @@
 
 [![Build Status](https://travis-ci.org/wgroeneveld/gba-sprite-engine.svg?branch=master)](https://travis-ci.org/wgroeneveld/gba-sprite-engine)
 
-That's a mouthful - let's break that down: -----
+That's a mouthful - let's break that down: 
 
 #### High-level object-oriented
 
