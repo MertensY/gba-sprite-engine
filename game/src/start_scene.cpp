@@ -1,7 +1,3 @@
-//
-// Created by Wouter Groeneveld on 02/08/18.
-//
-
 #include <libgba-sprite-engine/sprites/sprite_builder.h>
 #include <libgba-sprite-engine/background/text_stream.h>
 #include <libgba-sprite-engine/gba/tonc_memdef.h>
@@ -11,11 +7,11 @@
 #include "flying_stuff_scene.h"
 
 #include "wave.h"
-#include "back.h"
+//#include "back.h"
 #include "sample_sound.h"
 
 std::vector<Background *> StartScene::backgrounds() {
-    return {bg.get()};
+    return {/*bg.get()*/};
 }
 
 std::vector<Sprite *> StartScene::sprites() {
@@ -24,7 +20,7 @@ std::vector<Sprite *> StartScene::sprites() {
 
 void StartScene::load() {
     foregroundPalette = std::unique_ptr<ForegroundPaletteManager>(new ForegroundPaletteManager(wavePal, sizeof(wavePal)));
-    backgroundPalette = std::unique_ptr<BackgroundPaletteManager>(new BackgroundPaletteManager(backPal, sizeof(backPal)));
+    backgroundPalette = std::unique_ptr<BackgroundPaletteManager>(new BackgroundPaletteManager(/*backPal, sizeof(backPal)*/));
 
     SpriteBuilder<Sprite> builder;
 
@@ -37,18 +33,17 @@ void StartScene::load() {
 
     TextStream::instance().setText("PRESS START", 3, 8);
 
-    bg = std::unique_ptr<Background>(new Background(1, backTiles, sizeof(backTiles), backMap, sizeof(backMap)));
-    bg.get()->useMapScreenBlock(16);
+    /*bg = std::unique_ptr<Background>(new Background(1, backTiles, sizeof(backTiles), backMap, sizeof(backMap)));
+    bg.get()->useMapScreenBlock(16);*/
 
-    engine->getTimer()->start();
     engine->enqueueMusic(zelda_music_16K_mono, zelda_music_16K_mono_bytes);
 }
 
 void StartScene::tick(u16 keys) {
-    TextStream::instance().setText(engine->getTimer()->to_string(), 18, 1);
+    TextStream::instance().setText(/*engine->getTimer()->to_string()*/"", 18, 1);
 
     if (pressingAorB && !((keys & KEY_A) || (keys & KEY_B))) {
-        engine->getTimer()->toggle();
+        //engine->getTimer()->toggle();
         pressingAorB = false;
     }
 
