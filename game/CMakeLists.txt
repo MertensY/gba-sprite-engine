@@ -5,7 +5,7 @@ add_executable(${PROJECT_NAME}.elf
         src/start_scene.cpp
         src/start_scene.h
         src/lama.h
-        src/sample_sound.h
+        src/start_music.h
         src/kul.h
         src/flying_stuff_scene.cpp
         src/flying_stuff_scene.h src/ff.h)

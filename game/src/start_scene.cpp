@@ -8,7 +8,7 @@
 
 #include "wave.h"
 #include "back.h"
-#include "sample_sound.h"
+#include "start_music.h"
 
 std::vector<Background *> StartScene::backgrounds() {
     return {bg.get()};
@@ -38,13 +38,13 @@ void StartScene::load() {
     bg = std::unique_ptr<Background>(new Background(1, backTiles, sizeof(backTiles), backMap, sizeof(backMap)));
     bg.get()->useMapScreenBlock(16);
 
-    engine->enqueueMusic(zelda_music_16K_mono, zelda_music_16K_mono_bytes);
+    engine->enqueueMusic(start_music, start_music_bytes);
 }
 
 void StartScene::tick(u16 keys) {
     if (keys & KEY_START) {
         if (!engine->isTransitioning()) {
-            engine->enqueueSound(zelda_secret_16K_mono, zelda_secret_16K_mono_bytes);
+            //engine->enqueueSound(zelda_secret_16K_mono, zelda_secret_16K_mono_bytes);
             engine->transitionIntoScene(new FlyingStuffScene(engine), new FadeOutScene(2));
         }
     }
