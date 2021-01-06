@@ -1,3 +1,7 @@
+//
+// Created by Wouter Groeneveld on 02/08/18.
+//
+
 #ifndef GBA_SPRITE_ENGINE_SAMPLE_START_SCENE_H
 #define GBA_SPRITE_ENGINE_SAMPLE_START_SCENE_H
 
@@ -6,6 +10,8 @@
 class SampleStartScene : public Scene {
 private:
     std::unique_ptr<Sprite> animation;
+    std::unique_ptr<Sprite> finalFantasyGuy;
+    std::unique_ptr<Sprite> smiley;
     bool pressingAorB = false;
 
 public:

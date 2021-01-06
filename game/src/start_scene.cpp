@@ -33,7 +33,7 @@ void StartScene::load() {
             .withLocation(103, 35)
             .buildPtr();
 
-    TextStream::instance().setText("PRESS START", 3, 426);
+    TextStream::instance().setText("PRESS START", 16, 10);
 
     bg = std::unique_ptr<Background>(new Background(1, backTiles, sizeof(backTiles), backMap, sizeof(backMap)));
     bg.get()->useMapScreenBlock(16);
@@ -42,20 +42,10 @@ void StartScene::load() {
 }
 
 void StartScene::tick(u16 keys) {
-
-    if (pressingAorB && !((keys & KEY_A) || (keys & KEY_B))) {
-        pressingAorB = false;
-    }
-
     if (keys & KEY_START) {
         if (!engine->isTransitioning()) {
             engine->enqueueSound(zelda_secret_16K_mono, zelda_secret_16K_mono_bytes);
-
-            TextStream::instance().setText("entered: starting next scene", 18, 1);
-
             engine->transitionIntoScene(new FlyingStuffScene(engine), new FadeOutScene(2));
         }
-    } else if ((keys & KEY_A) || (keys & KEY_B)) {
-        pressingAorB = true;
     }
 }

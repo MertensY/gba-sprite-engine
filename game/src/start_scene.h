@@ -1,9 +1,5 @@
-//
-// Created by Wouter Groeneveld on 02/08/18.
-//
-
-#ifndef GBA_SPRITE_ENGINE_SAMPLE_START_SCENE_H
-#define GBA_SPRITE_ENGINE_SAMPLE_START_SCENE_H
+#ifndef GBA_SPRITE_ENGINE_START_SCENE_H
+#define GBA_SPRITE_ENGINE_START_SCENE_H
 
 #include <libgba-sprite-engine/scene.h>
 
@@ -11,9 +7,6 @@ class StartScene : public Scene {
 private:
     std::unique_ptr<Sprite> animation;
     std::unique_ptr<Background> bg;
-    std::unique_ptr<Sprite> finalFantasyGuy;
-    std::unique_ptr<Sprite> smiley;
-    bool pressingAorB = false;
 
 public:
     std::vector<Sprite *> sprites() override;
@@ -27,4 +20,4 @@ public:
 };
 
 
-#endif //GBA_SPRITE_ENGINE_SAMPLE_START_SCENE_H
+#endif //GBA_SPRITE_ENGINE_START_SCENE_H
