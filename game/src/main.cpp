@@ -5,7 +5,7 @@
 #include <libgba-sprite-engine/palette/palette_manager.h>
 #include <libgba-sprite-engine/allocator.h>
 
-#include "sample_start_scene.h"
+#include "start_scene.h"
 
 /**
  * shared palette extracted from grit
@@ -15,7 +15,7 @@
 int main() {
     std::shared_ptr<GBAEngine> engine(new GBAEngine());
 
-    SampleStartScene* startScene = new SampleStartScene(engine);
+    StartScene* startScene = new StartScene(engine);
     engine->setScene(startScene);
 
     while (true) {

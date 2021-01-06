@@ -7,9 +7,10 @@
 
 #include <libgba-sprite-engine/scene.h>
 
-class SampleStartScene : public Scene {
+class StartScene : public Scene {
 private:
     std::unique_ptr<Sprite> animation;
+    std::unique_ptr<Background> bg;
     std::unique_ptr<Sprite> finalFantasyGuy;
     std::unique_ptr<Sprite> smiley;
     bool pressingAorB = false;
@@ -18,7 +19,7 @@ public:
     std::vector<Sprite *> sprites() override;
     std::vector<Background *> backgrounds() override;
 
-    SampleStartScene(std::shared_ptr<GBAEngine> engine) : Scene(engine) {}
+    StartScene(std::shared_ptr<GBAEngine> engine) : Scene(engine) {}
 
     void load() override;
     void tick(u16 keys) override;
