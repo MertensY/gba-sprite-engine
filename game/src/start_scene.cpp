@@ -7,11 +7,11 @@
 #include "flying_stuff_scene.h"
 
 #include "wave.h"
-//#include "back.h"
+#include "back.h"
 #include "sample_sound.h"
 
 std::vector<Background *> StartScene::backgrounds() {
-    return {/*bg.get()*/};
+    return {bg.get()};
 }
 
 std::vector<Sprite *> StartScene::sprites() {
@@ -19,8 +19,10 @@ std::vector<Sprite *> StartScene::sprites() {
 }
 
 void StartScene::load() {
-    foregroundPalette = std::unique_ptr<ForegroundPaletteManager>(new ForegroundPaletteManager(wavePal, sizeof(wavePal)));
-    backgroundPalette = std::unique_ptr<BackgroundPaletteManager>(new BackgroundPaletteManager(/*backPal, sizeof(backPal)*/));
+    foregroundPalette = std::unique_ptr<ForegroundPaletteManager>(
+            new ForegroundPaletteManager(wavePal, sizeof(wavePal)));
+    backgroundPalette = std::unique_ptr<BackgroundPaletteManager>(
+            new BackgroundPaletteManager(backPal, sizeof(backPal)));
 
     SpriteBuilder<Sprite> builder;
 
@@ -28,22 +30,20 @@ void StartScene::load() {
             .withData(waveTiles, sizeof(waveTiles))
             .withSize(SIZE_32_32)
             .withAnimated(2, 5)
-            .withLocation(105, 80)
+            .withLocation(103, 35)
             .buildPtr();
 
-    TextStream::instance().setText("PRESS START", 3, 8);
+    TextStream::instance().setText("PRESS START", 3, 426);
 
-    /*bg = std::unique_ptr<Background>(new Background(1, backTiles, sizeof(backTiles), backMap, sizeof(backMap)));
-    bg.get()->useMapScreenBlock(16);*/
+    bg = std::unique_ptr<Background>(new Background(1, backTiles, sizeof(backTiles), backMap, sizeof(backMap)));
+    bg.get()->useMapScreenBlock(16);
 
     engine->enqueueMusic(zelda_music_16K_mono, zelda_music_16K_mono_bytes);
 }
 
 void StartScene::tick(u16 keys) {
-    TextStream::instance().setText(/*engine->getTimer()->to_string()*/"", 18, 1);
 
     if (pressingAorB && !((keys & KEY_A) || (keys & KEY_B))) {
-        //engine->getTimer()->toggle();
         pressingAorB = false;
     }
 
@@ -51,18 +51,10 @@ void StartScene::tick(u16 keys) {
         if (!engine->isTransitioning()) {
             engine->enqueueSound(zelda_secret_16K_mono, zelda_secret_16K_mono_bytes);
 
-            TextStream::instance() << "entered: starting next scene";
+            TextStream::instance().setText("entered: starting next scene", 18, 1);
 
             engine->transitionIntoScene(new FlyingStuffScene(engine), new FadeOutScene(2));
         }
-    } else if (keys & KEY_LEFT) {
-        animation->flipHorizontally(true);
-    } else if (keys & KEY_RIGHT) {
-        animation->flipHorizontally(false);
-    } else if (keys & KEY_UP) {
-        animation->flipVertically(true);
-    } else if (keys & KEY_DOWN) {
-        animation->flipVertically(false);
     } else if ((keys & KEY_A) || (keys & KEY_B)) {
         pressingAorB = true;
     }
