@@ -1,9 +1,9 @@
 
-//{{BLOCK(back)
+//{{BLOCK(start_back)
 
 //======================================================================
 //
-//	back, 256x256@8, 
+//	start_back, 256x256@8, 
 //	+ palette 256 entries, not compressed
 //	+ 44 tiles (t|f|p reduced) not compressed
 //	+ regular map (in SBBs), not compressed, 32x32 
@@ -15,7 +15,7 @@
 //
 //======================================================================
 
-const unsigned int backTiles[704] __attribute__((aligned(4)))=
+const unsigned int start_backTiles[704] __attribute__((aligned(4)))=
 {
 	0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,
 	0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,
@@ -117,7 +117,7 @@ const unsigned int backTiles[704] __attribute__((aligned(4)))=
 	0x03030304,0x03030302,0x03030301,0x03030301,0x02020301,0x02030201,0x04040201,0x04040404,
 };
 
-const unsigned short backMap[1024] __attribute__((aligned(4)))=
+const unsigned short start_backMap[1024] __attribute__((aligned(4)))=
 {
 	0x0001,0x0001,0x0001,0x0001,0x0001,0x0001,0x0001,0x0001,
 	0x0001,0x0001,0x0001,0x0001,0x0001,0x0001,0x0001,0x0001,
@@ -264,7 +264,7 @@ const unsigned short backMap[1024] __attribute__((aligned(4)))=
 	0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,
 };
 
-const unsigned short backPal[256] __attribute__((aligned(4)))=
+const unsigned short start_backPal[256] __attribute__((aligned(4)))=
 {
 	0x0000,0x1967,0x2A6C,0x3B71,0x21E9,0x4B98,0x32EE,0x0000,
 	0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,
@@ -303,4 +303,4 @@ const unsigned short backPal[256] __attribute__((aligned(4)))=
 	0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,
 };
 
-//}}BLOCK(back)
+//}}BLOCK(start_back)

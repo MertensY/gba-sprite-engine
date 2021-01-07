@@ -7,7 +7,7 @@
 #include "game_scene.h"
 
 #include "wave.h"
-#include "back.h"
+#include "start_back.h"
 #include "start_music.h"
 
 std::vector<Background *> StartScene::backgrounds() {
@@ -22,7 +22,7 @@ void StartScene::load() {
     foregroundPalette = std::unique_ptr<ForegroundPaletteManager>(
             new ForegroundPaletteManager(wavePal, sizeof(wavePal)));
     backgroundPalette = std::unique_ptr<BackgroundPaletteManager>(
-            new BackgroundPaletteManager(backPal, sizeof(backPal)));
+            new BackgroundPaletteManager(startbackPal, sizeof(backPal)));
 
     SpriteBuilder<Sprite> builder;
 

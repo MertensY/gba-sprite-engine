@@ -6,7 +6,7 @@
 #include "game_scene.h"
 
 #include "wave.h"
-#include "back.h"
+#include "game_back.h"
 #include "game_music.h"
 
 std::vector<Sprite *> GameScene::sprites() {
@@ -23,7 +23,7 @@ std::vector<Background *> GameScene::backgrounds() {
 
 void GameScene::load() {
     foregroundPalette = std::unique_ptr<ForegroundPaletteManager>(new ForegroundPaletteManager(wavePal, sizeof(wavePal)));
-    backgroundPalette = std::unique_ptr<BackgroundPaletteManager>(new BackgroundPaletteManager(backPal, sizeof(backPal)));
+    backgroundPalette = std::unique_ptr<BackgroundPaletteManager>(new BackgroundPaletteManager(game_backPal, sizeof(game_backPal)));
 
     SpriteBuilder<Sprite> builder;
 
@@ -31,10 +31,10 @@ void GameScene::load() {
             .withData(waveTiles, sizeof(waveTiles))
             .withSize(SIZE_32_32)
             .withAnimated(2, 5)
-            .withLocation(103, 35)
+            .withLocation(103, 110)
             .buildPtr();
 
-    bg = std::unique_ptr<Background>(new Background(1, backTiles, sizeof(backTiles), backMap, sizeof(backMap)));
+    bg = std::unique_ptr<Background>(new Background(1, game_backTiles, sizeof(game_backTiles), game_backMap, sizeof(game_backMap)));
     bg.get()->useMapScreenBlock(16);
 
     engine->enqueueMusic(game_music, game_music_bytes);

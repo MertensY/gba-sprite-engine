@@ -6,7 +6,7 @@ add_executable(${PROJECT_NAME}.elf
         src/start_scene.h
         src/start_music.h
         src/wave.h
-        src/back.h
+        src/start_back.h
         src/game_scene.cpp
         src/game_scene.h
         src/game_music.h)
