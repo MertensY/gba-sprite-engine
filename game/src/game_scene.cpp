@@ -11,7 +11,7 @@
 
 std::vector<Sprite *> GameScene::sprites() {
     return {
-        animation.get()
+        player.get(), ball.get()
     };
 }
 
@@ -26,12 +26,21 @@ void GameScene::load() {
     backgroundPalette = std::unique_ptr<BackgroundPaletteManager>(new BackgroundPaletteManager(game_backPal, sizeof(game_backPal)));
 
     SpriteBuilder<Sprite> builder;
+    SpriteBuilder<AffineSprite> affineBuilder;
 
-    animation = builder
+    player = builder
+            .withData(walkTiles, sizeof(walkTiles))
+            .withSize(SIZE_32_32)
+            .withAnimated(4, 4)
+            .withinBounds()
+            .withLocation(103, 110)
+            .buildPtr();
+
+    ball = affineBuilder
             .withData(ballTiles, sizeof(ballTiles))
             .withSize(SIZE_16_16)
-            //.withAnimated(4, 5)
-            .withLocation(103, 110)
+            .withLocation(100, 50)
+            .withVelocity(0, 1)
             .buildPtr();
 
     bg = std::unique_ptr<Background>(new Background(1, game_backTiles, sizeof(game_backTiles), game_backMap, sizeof(game_backMap)));
@@ -41,5 +50,21 @@ void GameScene::load() {
 }
 
 void GameScene::tick(u16 keys) {
+    rotate += 300;
+    ball.get()->rotate(rotate);
 
+    if(keys & KEY_LEFT) {
+        player->flipHorizontally(false);
+        player->animate();
+        player->setVelocity(-2, 0);
+    } else if(keys & KEY_RIGHT) {
+        player->flipHorizontally(true);
+        player->animate();
+        player->setVelocity(+2, 0);
+    } else {
+        player->flipHorizontally(false);
+        player->stopAnimating();
+        player->animateToFrame(4);
+        player->setVelocity(0, 0);
+    }
 }

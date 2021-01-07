@@ -8,6 +8,9 @@ A wild pikachu is born free, but for how long? Some trainer has decided to make 
 
 #### Controls
 
+- Press start to start game
+- Press left or right to move
+
 #### Project information
 
 This game was developed as part of our bridging programme Electronics and ICT Engineering Technology (pba EA ICT) at Hasselt University. The assignment is a part of the course [Software design with C/C++](https://www.uhasselt.be/studiegids?n=4&t=01&a=2020&i=3433).

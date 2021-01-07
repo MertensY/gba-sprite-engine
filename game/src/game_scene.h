@@ -8,14 +8,18 @@
 
 class GameScene : public Scene {
 private:
-    std::unique_ptr<Sprite> animation;
+    std::unique_ptr<Sprite> player;
+    std::unique_ptr<AffineSprite> ball;
     std::unique_ptr<Background> bg;
 
+    int playerX;
+    int playerSpeed = 32;
+    int rotate;
 public:
+    GameScene(std::shared_ptr<GBAEngine> engine) : Scene(engine), playerX(103), playerSpeed(32), rotate(0) {}
+
     std::vector<Sprite *> sprites() override;
     std::vector<Background *> backgrounds() override;
-
-    GameScene(std::shared_ptr<GBAEngine> engine) : Scene(engine) {}
 
     void load() override;
     void tick(u16 keys) override;
