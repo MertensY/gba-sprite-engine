@@ -5,7 +5,7 @@
 
 class StartScene : public Scene {
 private:
-    std::unique_ptr<Sprite> animation;
+    std::unique_ptr<Sprite> wave;
     std::unique_ptr<Background> bg;
 
 public:

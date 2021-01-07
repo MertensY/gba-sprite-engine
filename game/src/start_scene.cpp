@@ -6,7 +6,7 @@
 #include "start_scene.h"
 #include "game_scene.h"
 
-#include "wave.h"
+#include "start_sprites.h"
 #include "start_back.h"
 #include "start_music.h"
 
@@ -15,18 +15,18 @@ std::vector<Background *> StartScene::backgrounds() {
 }
 
 std::vector<Sprite *> StartScene::sprites() {
-    return {animation.get()};
+    return {wave.get()};
 }
 
 void StartScene::load() {
     foregroundPalette = std::unique_ptr<ForegroundPaletteManager>(
             new ForegroundPaletteManager(wavePal, sizeof(wavePal)));
     backgroundPalette = std::unique_ptr<BackgroundPaletteManager>(
-            new BackgroundPaletteManager(startbackPal, sizeof(backPal)));
+            new BackgroundPaletteManager(start_backPal, sizeof(start_backPal)));
 
     SpriteBuilder<Sprite> builder;
 
-    animation = builder
+    wave = builder
             .withData(waveTiles, sizeof(waveTiles))
             .withSize(SIZE_32_32)
             .withAnimated(2, 5)
@@ -35,7 +35,7 @@ void StartScene::load() {
 
     TextStream::instance().setText("PRESS START", 16, 10);
 
-    bg = std::unique_ptr<Background>(new Background(1, backTiles, sizeof(backTiles), backMap, sizeof(backMap)));
+    bg = std::unique_ptr<Background>(new Background(1, start_backTiles, sizeof(start_backTiles), start_backMap, sizeof(start_backMap)));
     bg.get()->useMapScreenBlock(16);
 
     engine->enqueueMusic(start_music, start_music_bytes);
@@ -44,7 +44,6 @@ void StartScene::load() {
 void StartScene::tick(u16 keys) {
     if (keys & KEY_START) {
         if (!engine->isTransitioning()) {
-            //engine->enqueueSound(zelda_secret_16K_mono, zelda_secret_16K_mono_bytes);
             engine->transitionIntoScene(new GameScene(engine), new FadeOutScene(2));
         }
     }

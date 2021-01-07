@@ -5,7 +5,7 @@
 #include <libgba-sprite-engine/background/text_stream.h>
 #include "game_scene.h"
 
-#include "wave.h"
+#include "game_sprites.h"
 #include "game_back.h"
 #include "game_music.h"
 
@@ -22,15 +22,15 @@ std::vector<Background *> GameScene::backgrounds() {
 }
 
 void GameScene::load() {
-    foregroundPalette = std::unique_ptr<ForegroundPaletteManager>(new ForegroundPaletteManager(wavePal, sizeof(wavePal)));
+    foregroundPalette = std::unique_ptr<ForegroundPaletteManager>(new ForegroundPaletteManager(game_spritesPal, sizeof(game_spritesPal)));
     backgroundPalette = std::unique_ptr<BackgroundPaletteManager>(new BackgroundPaletteManager(game_backPal, sizeof(game_backPal)));
 
     SpriteBuilder<Sprite> builder;
 
     animation = builder
-            .withData(waveTiles, sizeof(waveTiles))
-            .withSize(SIZE_32_32)
-            .withAnimated(2, 5)
+            .withData(ballTiles, sizeof(ballTiles))
+            .withSize(SIZE_16_16)
+            //.withAnimated(4, 5)
             .withLocation(103, 110)
             .buildPtr();
 
