@@ -4,11 +4,12 @@ add_executable(${PROJECT_NAME}.elf
         src/main.cpp
         src/start_scene.cpp
         src/start_scene.h
-        src/lama.h
         src/start_music.h
-        src/kul.h
-        src/flying_stuff_scene.cpp
-        src/flying_stuff_scene.h src/ff.h)
+        src/wave.h
+        src/back.h
+        src/game_scene.cpp
+        src/game_scene.h
+        src/game_music.h)
 
 target_link_libraries(${PROJECT_NAME}.elf gba-sprite-engine)
 

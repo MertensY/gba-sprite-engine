@@ -4,7 +4,7 @@
 #include <libgba-sprite-engine/gba_engine.h>
 #include <libgba-sprite-engine/effects/fade_out_scene.h>
 #include "start_scene.h"
-#include "flying_stuff_scene.h"
+#include "game_scene.h"
 
 #include "wave.h"
 #include "back.h"
@@ -45,7 +45,7 @@ void StartScene::tick(u16 keys) {
     if (keys & KEY_START) {
         if (!engine->isTransitioning()) {
             //engine->enqueueSound(zelda_secret_16K_mono, zelda_secret_16K_mono_bytes);
-            engine->transitionIntoScene(new FlyingStuffScene(engine), new FadeOutScene(2));
+            engine->transitionIntoScene(new GameScene(engine), new FadeOutScene(2));
         }
     }
 }

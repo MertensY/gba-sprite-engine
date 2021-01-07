@@ -1,69 +1,45 @@
-//
-// Created by Wouter Groeneveld on 28/07/18.
-//
-
 #include <libgba-sprite-engine/sprites/affine_sprite.h>
 #include <libgba-sprite-engine/sprites/sprite_builder.h>
 #include <libgba-sprite-engine/gba/tonc_memmap.h>
+#include <libgba-sprite-engine/gba_engine.h>
 #include <libgba-sprite-engine/background/text_stream.h>
-#include "flying_stuff_scene.h"
-#include "kul.h"
+#include "game_scene.h"
 
-std::vector<Sprite *> FlyingStuffScene::sprites() {
+#include "wave.h"
+#include "back.h"
+#include "game_music.h"
+
+std::vector<Sprite *> GameScene::sprites() {
     return {
-        smiley.get(), kul.get(), kulFlying.get(), player.get()
+        animation.get()
     };
 }
 
-std::vector<Background *> FlyingStuffScene::backgrounds() {
+std::vector<Background *> GameScene::backgrounds() {
     return {
         bg.get()
     };
 }
 
-void FlyingStuffScene::load() {
-    foregroundPalette = std::unique_ptr<ForegroundPaletteManager>(new ForegroundPaletteManager(sharedPal, sizeof(sharedPal)));
-    backgroundPalette = std::unique_ptr<BackgroundPaletteManager>(new BackgroundPaletteManager(bg_palette, sizeof(bg_palette)));
+void GameScene::load() {
+    foregroundPalette = std::unique_ptr<ForegroundPaletteManager>(new ForegroundPaletteManager(wavePal, sizeof(wavePal)));
+    backgroundPalette = std::unique_ptr<BackgroundPaletteManager>(new BackgroundPaletteManager(backPal, sizeof(backPal)));
 
     SpriteBuilder<Sprite> builder;
-    SpriteBuilder<AffineSprite> affineBuilder;
 
-    smiley = builder
-            .withData(piskelTiles, sizeof(piskelTiles))
-            .withSize(SIZE_16_16)
-            .withLocation(10, 10)
+    animation = builder
+            .withData(waveTiles, sizeof(waveTiles))
+            .withSize(SIZE_32_32)
+            .withAnimated(2, 5)
+            .withLocation(103, 35)
             .buildPtr();
 
-    kul = builder
-            .withData(kulTiles, sizeof(kulTiles))
-            .withSize(SIZE_64_32)
-            .withLocation(30, 30)
-            .buildPtr();
-
-    kulFlying = affineBuilder
-            .withData(kulTiles, sizeof(kulTiles))
-            .withSize(SIZE_64_32)
-            .withLocation(100, 50)
-            .withVelocity(1, 1)
-            .buildPtr();
-
-    player = affineBuilder
-            .withData(piskel2Tiles, sizeof(piskel2Tiles))
-            .withSize(SIZE_16_16)
-            .withLocation(150, 60)
-            .buildPtr();
-
-    TextStream::instance() << "level 1 ofwa" << "ziet da af";
-
-    bg = std::unique_ptr<Background>(new Background(1, background_data, sizeof(background_data), map, sizeof(map)));
+    bg = std::unique_ptr<Background>(new Background(1, backTiles, sizeof(backTiles), backMap, sizeof(backMap)));
     bg.get()->useMapScreenBlock(16);
+
+    engine->enqueueMusic(game_music, game_music_bytes);
 }
 
-void FlyingStuffScene::tick(u16 keys) {
-    scrollX += 1;
+void GameScene::tick(u16 keys) {
 
-    rotation += rotationDiff;
-    kulFlying.get()->rotate(rotation);
-    player.get()->rotate(rotation);
-    bg.get()->scroll(scrollX, scrollY);
 }
