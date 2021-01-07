@@ -12,11 +12,11 @@ private:
     std::unique_ptr<AffineSprite> ball;
     std::unique_ptr<Background> bg;
 
-    int playerX;
+    int playerX, ballX;
     int playerSpeed = 32;
     int rotate;
 public:
-    GameScene(std::shared_ptr<GBAEngine> engine) : Scene(engine), playerX(103), playerSpeed(32), rotate(0) {}
+    GameScene(std::shared_ptr<GBAEngine> engine) : Scene(engine), playerX(103), ballX(0), playerSpeed(32), rotate(0) {}
 
     std::vector<Sprite *> sprites() override;
     std::vector<Background *> backgrounds() override;

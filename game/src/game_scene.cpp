@@ -1,3 +1,5 @@
+#include <stdlib.h>
+#include <stdio.h>
 #include <libgba-sprite-engine/sprites/affine_sprite.h>
 #include <libgba-sprite-engine/sprites/sprite_builder.h>
 #include <libgba-sprite-engine/gba/tonc_memmap.h>
@@ -22,6 +24,8 @@ std::vector<Background *> GameScene::backgrounds() {
 }
 
 void GameScene::load() {
+    srand(engine->getTimer()->getTotalMsecs());
+
     foregroundPalette = std::unique_ptr<ForegroundPaletteManager>(new ForegroundPaletteManager(game_spritesPal, sizeof(game_spritesPal)));
     backgroundPalette = std::unique_ptr<BackgroundPaletteManager>(new BackgroundPaletteManager(game_backPal, sizeof(game_backPal)));
 
@@ -36,10 +40,12 @@ void GameScene::load() {
             .withLocation(103, 110)
             .buildPtr();
 
+    ballX = rand() % GBA_SCREEN_WIDTH;
+
     ball = affineBuilder
             .withData(ballTiles, sizeof(ballTiles))
             .withSize(SIZE_16_16)
-            .withLocation(100, 50)
+            .withLocation(ballX, 0)
             .withVelocity(0, 1)
             .buildPtr();
 
@@ -53,6 +59,7 @@ void GameScene::tick(u16 keys) {
     rotate += 300;
     ball.get()->rotate(rotate);
 
+    // Player inputs
     if(keys & KEY_LEFT) {
         player->flipHorizontally(false);
         player->animate();
@@ -66,5 +73,11 @@ void GameScene::tick(u16 keys) {
         player->stopAnimating();
         player->animateToFrame(4);
         player->setVelocity(0, 0);
+    }
+
+    // In-game events
+    if(ball->getY() >= (GBA_SCREEN_HEIGHT - ball->getHeight()) && ball->getY() > 0) {
+        ballX = rand() % GBA_SCREEN_WIDTH;
+        ball->moveTo(ballX, -10);
     }
 }

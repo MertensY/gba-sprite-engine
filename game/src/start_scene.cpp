@@ -38,6 +38,7 @@ void StartScene::load() {
     bg = std::unique_ptr<Background>(new Background(1, start_backTiles, sizeof(start_backTiles), start_backMap, sizeof(start_backMap)));
     bg.get()->useMapScreenBlock(16);
 
+    engine->getTimer()->start(); // For random seed in next scene
     engine->enqueueMusic(start_music, start_music_bytes);
 }
 
