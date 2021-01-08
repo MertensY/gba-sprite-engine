@@ -43,9 +43,11 @@ void StartScene::load() {
 }
 
 void StartScene::tick(u16 keys) {
+    // Player inputs
     if (keys & KEY_START) {
         if (!engine->isTransitioning()) {
-            engine->transitionIntoScene(new GameScene(engine), new FadeOutScene(2));
+            engine->enqueueSound(button, button_bytes);
+            engine->transitionIntoScene(new GameScene(engine), new FadeOutScene(3));
         }
     }
 }

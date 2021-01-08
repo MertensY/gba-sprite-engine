@@ -54,7 +54,8 @@ void GameScene::load() {
     bg = std::unique_ptr<Background>(new Background(1, game_backTiles, sizeof(game_backTiles), game_backMap, sizeof(game_backMap)));
     bg.get()->useMapScreenBlock(16);
 
-    engine->enqueueMusic(game_music, game_music_bytes);
+    engine->enqueueSound(intro, intro_bytes);
+    timeTemp = engine->getTimer()->getTotalMsecs();
 }
 
 void GameScene::tick(u16 keys) {
@@ -85,7 +86,14 @@ void GameScene::tick(u16 keys) {
 
     if(player->collidesWith(*ball)){
         if (!engine->isTransitioning()) {
+            engine->enqueueSound(ball_open, ball_open_bytes);
             engine->transitionIntoScene(new EndScene(engine), new FadeOutScene(2));
         }
+    }
+
+    // Music intro
+    if(!playingMusic && (engine->getTimer()->getTotalMsecs() - timeTemp) >= 2325){
+        engine->enqueueMusic(game_music, game_music_bytes);
+        playingMusic = true;
     }
 }

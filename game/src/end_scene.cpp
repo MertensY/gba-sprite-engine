@@ -4,9 +4,11 @@
 #include <libgba-sprite-engine/gba_engine.h>
 #include <libgba-sprite-engine/effects/fade_out_scene.h>
 #include "end_scene.h"
-#include "start_scene.h"
+#include "game_scene.h"
 
 #include "end_sprites.h"
+#include "end_music.h"
+#include "start_music.h"
 #include "start_back.h"
 
 std::vector<Background *> EndScene::backgrounds() {
@@ -28,20 +30,48 @@ void EndScene::load() {
     ball = builder
             .withData(ballTiles, sizeof(ballTiles))
             .withSize(SIZE_32_32)
-            .withAnimated(4, 5)
+            .withAnimated(4, 10)
             .withLocation(103, 35)
             .buildPtr();
+    ball->animateToFrame(3);
 
-    TextStream::instance().setText("PRESS START", 16, 10);
+    TextStream::instance().setText("PRESS START TO RESTART", 16, 4);
 
     bg = std::unique_ptr<Background>(new Background(1, start_backTiles, sizeof(start_backTiles), start_backMap, sizeof(start_backMap)));
     bg.get()->useMapScreenBlock(16);
+
+    timeTemp = engine->getTimer()->getTotalMsecs();
+    engine->enqueueSound(ball_wiggle, ball_wiggle_bytes);
 }
 
 void EndScene::tick(u16 keys) {
+
+    // Player inputs
     if (keys & KEY_START) {
         if (!engine->isTransitioning()) {
-            engine->transitionIntoScene(new StartScene(engine), new FadeOutScene(2));
+            engine->enqueueSound(button, button_bytes);
+            engine->transitionIntoScene(new GameScene(engine), new FadeOutScene(3));
         }
+
+    }
+
+    // Animation
+    if(wiggles < 2 && (engine->getTimer()->getTotalMsecs() - timeTemp) >= 1000){
+        engine->enqueueSound(ball_wiggle, ball_wiggle_bytes);
+        ball->animate();
+        timeTemp = engine->getTimer()->getTotalMsecs();
+        wiggles++;
+    } else if(!playedSound && (engine->getTimer()->getTotalMsecs() - timeTemp) >= 1000){
+        engine->enqueueSound(jingle, jingle_bytes);
+        ball->stopAnimating();
+        ball->animateToFrame(3);
+        TextStream::instance().setText("Gotcha!", 1, 11);
+        TextStream::instance().setText("Pikachu was caught!", 2, 5);
+        playedSound = true;
+    }
+
+    if(playedSound && !playingMusic && (engine->getTimer()->getTotalMsecs() - timeTemp) >= 4396){
+        engine->enqueueMusic(end_music, end_music_bytes);
+        playingMusic = true;
     }
 }
