@@ -5,7 +5,9 @@
 #include <libgba-sprite-engine/gba/tonc_memmap.h>
 #include <libgba-sprite-engine/gba_engine.h>
 #include <libgba-sprite-engine/background/text_stream.h>
+#include <libgba-sprite-engine/effects/fade_out_scene.h>
 #include "game_scene.h"
+#include "start_scene.h"
 
 #include "game_sprites.h"
 #include "game_back.h"
@@ -76,8 +78,14 @@ void GameScene::tick(u16 keys) {
     }
 
     // In-game events
-    if(ball->getY() >= (GBA_SCREEN_HEIGHT - ball->getHeight()) && ball->getY() > 0) {
+    if(ball->getY() >= (GBA_SCREEN_HEIGHT + 50) && ball->getY() > 0) {
         ballX = rand() % GBA_SCREEN_WIDTH;
         ball->moveTo(ballX, -10);
+    }
+
+    if(player->collidesWith(*ball)){
+        if (!engine->isTransitioning()) {
+            engine->transitionIntoScene(new StartScene(engine), new FadeOutScene(2));
+        }
     }
 }
