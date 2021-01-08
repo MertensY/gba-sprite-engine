@@ -7,7 +7,7 @@
 #include <libgba-sprite-engine/background/text_stream.h>
 #include <libgba-sprite-engine/effects/fade_out_scene.h>
 #include "game_scene.h"
-#include "start_scene.h"
+#include "end_scene.h"
 
 #include "game_sprites.h"
 #include "game_back.h"
@@ -85,7 +85,7 @@ void GameScene::tick(u16 keys) {
 
     if(player->collidesWith(*ball)){
         if (!engine->isTransitioning()) {
-            engine->transitionIntoScene(new StartScene(engine), new FadeOutScene(2));
+            engine->transitionIntoScene(new EndScene(engine), new FadeOutScene(2));
         }
     }
 }

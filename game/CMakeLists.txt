@@ -11,7 +11,10 @@ add_executable(${PROJECT_NAME}.elf
         src/game_scene.h
         src/game_music.h
         src/game_sprites.h
-        src/game_back.h)
+        src/game_back.h
+        src/end_scene.cpp
+        src/end_scene.h
+        src/end_sprites.h)
 
 target_link_libraries(${PROJECT_NAME}.elf gba-sprite-engine)
 
