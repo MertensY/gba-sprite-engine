@@ -11,6 +11,8 @@
 #include "start_music.h"
 #include "start_back.h"
 
+    // vector reference //
+
 std::vector<Background *> EndScene::backgrounds() {
     return {bg.get()};
 }
@@ -18,6 +20,8 @@ std::vector<Background *> EndScene::backgrounds() {
 std::vector<Sprite *> EndScene::sprites() {
     return {ball.get()};
 }
+
+    // load foregroundPalette, backgroundPalette //
 
 void EndScene::load() {
     foregroundPalette = std::unique_ptr<ForegroundPaletteManager>(
@@ -27,6 +31,8 @@ void EndScene::load() {
 
     SpriteBuilder<Sprite> builder;
 
+    // create sprites //
+
     ball = builder
             .withData(ballTiles, sizeof(ballTiles))
             .withSize(SIZE_32_32)
@@ -35,7 +41,11 @@ void EndScene::load() {
             .buildPtr();
     ball->animateToFrame(3);
 
+    // interface //
+
     TextStream::instance().setText("PRESS START TO RESTART", 16, 4);
+
+    // create background //
 
     bg = std::unique_ptr<Background>(new Background(1, start_backTiles, sizeof(start_backTiles), start_backMap, sizeof(start_backMap)));
     bg.get()->useMapScreenBlock(16);
@@ -46,7 +56,9 @@ void EndScene::load() {
 
 void EndScene::tick(u16 keys) {
 
-    // Player inputs
+    // Player inputs //
+    // ---controls--- //
+
     if (keys & KEY_START) {
         if (!engine->isTransitioning()) {
             engine->enqueueSound(button, button_bytes);
@@ -55,7 +67,8 @@ void EndScene::tick(u16 keys) {
 
     }
 
-    // Animation
+    // Animation //
+
     if(wiggles < 2 && (engine->getTimer()->getTotalMsecs() - timeTemp) >= 1000){
         engine->enqueueSound(ball_wiggle, ball_wiggle_bytes);
         ball->animate();

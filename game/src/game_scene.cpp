@@ -13,6 +13,8 @@
 #include "game_back.h"
 #include "game_music.h"
 
+    // vector reference //
+
 std::vector<Sprite *> GameScene::sprites() {
     return {
         player.get(), ball.get()
@@ -25,6 +27,8 @@ std::vector<Background *> GameScene::backgrounds() {
     };
 }
 
+    // load foregroundPalette, backgroundPalette //
+
 void GameScene::load() {
     srand(engine->getTimer()->getTotalMsecs());
 
@@ -34,6 +38,8 @@ void GameScene::load() {
     SpriteBuilder<Sprite> builder;
     SpriteBuilder<AffineSprite> affineBuilder;
 
+    // create sprites //
+
     player = builder
             .withData(walkTiles, sizeof(walkTiles))
             .withSize(SIZE_32_32)
@@ -42,7 +48,11 @@ void GameScene::load() {
             .withLocation(103, 110)
             .buildPtr();
 
+    // start value ball //
+
     ballX = rand() % GBA_SCREEN_WIDTH;
+
+    // create sprite //
 
     ball = affineBuilder
             .withData(ballTiles, sizeof(ballTiles))
@@ -51,18 +61,25 @@ void GameScene::load() {
             .withVelocity(0, 1)
             .buildPtr();
 
+    // create background //
+
     bg = std::unique_ptr<Background>(new Background(1, game_backTiles, sizeof(game_backTiles), game_backMap, sizeof(game_backMap)));
     bg.get()->useMapScreenBlock(16);
+
+    // create timer //
 
     engine->enqueueSound(intro, intro_bytes);
     timeTemp = engine->getTimer()->getTotalMsecs();
 }
+    // ball rotation //
 
 void GameScene::tick(u16 keys) {
     rotate += 300;
     ball.get()->rotate(rotate);
 
-    // Player inputs
+    // Player inputs //
+    // ---controls--- //
+
     if(keys & KEY_LEFT) {
         player->flipHorizontally(false);
         player->animate();
@@ -78,11 +95,13 @@ void GameScene::tick(u16 keys) {
         player->setVelocity(0, 0);
     }
 
-    // In-game events
+    // In-game events //
+
     if(ball->getY() >= (GBA_SCREEN_HEIGHT + 50) && ball->getY() > 0) {
         ballX = rand() % GBA_SCREEN_WIDTH;
         ball->moveTo(ballX, -10);
     }
+    // player loses //
 
     if(player->collidesWith(*ball)){
         if (!engine->isTransitioning()) {
@@ -91,7 +110,8 @@ void GameScene::tick(u16 keys) {
         }
     }
 
-    // Music intro
+    // Music intro //
+
     if(!playingMusic && (engine->getTimer()->getTotalMsecs() - timeTemp) >= 2325){
         engine->enqueueMusic(game_music, game_music_bytes);
         playingMusic = true;

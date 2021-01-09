@@ -8,9 +8,14 @@
 
 class GameScene : public Scene {
 private:
+
+    // pointers //
+
     std::unique_ptr<Sprite> player;
     std::unique_ptr<AffineSprite> ball;
     std::unique_ptr<Background> bg;
+
+    // variables //
 
     int ballX;
     int playerSpeed = 32;
@@ -19,10 +24,15 @@ private:
     bool playingMusic = false;
 
 public:
+
+    // pointers //
+
     GameScene(std::shared_ptr<GBAEngine> engine) : Scene(engine), ballX(0), playerSpeed(32), rotate(0), timeTemp(0) {}
 
     std::vector<Sprite *> sprites() override;
     std::vector<Background *> backgrounds() override;
+
+    // functions //
 
     void load() override;
     void tick(u16 keys) override;

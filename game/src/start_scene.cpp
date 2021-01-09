@@ -10,6 +10,8 @@
 #include "start_back.h"
 #include "start_music.h"
 
+    // vector reference //
+
 std::vector<Background *> StartScene::backgrounds() {
     return {bg.get()};
 }
@@ -17,14 +19,16 @@ std::vector<Background *> StartScene::backgrounds() {
 std::vector<Sprite *> StartScene::sprites() {
     return {wave.get()};
 }
+    // load foregroundPalette, backgroundPalette //
 
 void StartScene::load() {
-    foregroundPalette = std::unique_ptr<ForegroundPaletteManager>(
-            new ForegroundPaletteManager(wavePal, sizeof(wavePal)));
-    backgroundPalette = std::unique_ptr<BackgroundPaletteManager>(
-            new BackgroundPaletteManager(start_backPal, sizeof(start_backPal)));
+
+    foregroundPalette = std::unique_ptr<ForegroundPaletteManager>(new ForegroundPaletteManager(wavePal, sizeof(wavePal)));
+    backgroundPalette = std::unique_ptr<BackgroundPaletteManager>(new BackgroundPaletteManager(start_backPal, sizeof(start_backPal)));
 
     SpriteBuilder<Sprite> builder;
+
+    // create sprites //
 
     wave = builder
             .withData(waveTiles, sizeof(waveTiles))
@@ -35,18 +39,26 @@ void StartScene::load() {
 
     TextStream::instance().setText("PRESS START", 16, 10);
 
+    // create background //
+
     bg = std::unique_ptr<Background>(new Background(1, start_backTiles, sizeof(start_backTiles), start_backMap, sizeof(start_backMap)));
     bg.get()->useMapScreenBlock(16);
+
+    // create timer //
 
     engine->getTimer()->start(); // For random seed in next scene
     engine->enqueueMusic(start_music, start_music_bytes);
 }
 
 void StartScene::tick(u16 keys) {
-    // Player inputs
+
+    // Player inputs //
+    // ---controls--- //
+
     if (keys & KEY_START) {
         if (!engine->isTransitioning()) {
             engine->enqueueSound(button, button_bytes);
+            //overgang nieuwe sene
             engine->transitionIntoScene(new GameScene(engine), new FadeOutScene(3));
         }
     }

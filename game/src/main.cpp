@@ -10,13 +10,19 @@
 int main() {
     std::shared_ptr<GBAEngine> engine(new GBAEngine());
 
+    // start engine //
+
     StartScene* startScene = new StartScene(engine);
     engine->setScene(startScene);
+
+    // update engine //
 
     while (true) {
         engine->update();
         engine->delay(1000);
     }
+
+    //engine not running//
 
     return 0;
 }
