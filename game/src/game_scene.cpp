@@ -17,7 +17,7 @@
 
 std::vector<Sprite *> GameScene::sprites() {
     return {
-        player.get(), ball.get()
+        player.get(), ball.get(), ball1.get(), ball2.get()
     };
 }
 
