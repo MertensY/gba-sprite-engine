@@ -51,7 +51,6 @@ void EndScene::load() {
     bg.get()->useMapScreenBlock(16);
 
     timeTemp = engine->getTimer()->getTotalMsecs();
-    engine->enqueueSound(ball_wiggle, ball_wiggle_bytes);
 }
 
 void EndScene::tick(u16 keys) {
@@ -69,7 +68,7 @@ void EndScene::tick(u16 keys) {
 
     // Animation //
 
-    if(wiggles < 2 && (engine->getTimer()->getTotalMsecs() - timeTemp) >= 1000){
+    if(wiggles < 3 && (engine->getTimer()->getTotalMsecs() - timeTemp) >= 1000){
         engine->enqueueSound(ball_wiggle, ball_wiggle_bytes);
         ball->animate();
         timeTemp = engine->getTimer()->getTotalMsecs();

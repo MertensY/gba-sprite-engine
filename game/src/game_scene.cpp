@@ -17,7 +17,7 @@
 
 std::vector<Sprite *> GameScene::sprites() {
     return {
-        player.get(), ball.get(), ball1.get(), ball2.get()
+        player.get(), ball.get()//, ball1.get(), ball2.get()
     };
 }
 
@@ -68,12 +68,12 @@ void GameScene::load() {
 
     // create timer //
 
-    engine->enqueueSound(intro, intro_bytes);
+    engine->enqueueMusic(intro, intro_bytes);
     timeTemp = engine->getTimer()->getTotalMsecs();
 }
-    // ball rotation //
 
 void GameScene::tick(u16 keys) {
+    // ball rotation //
     rotate += 300;
     ball.get()->rotate(rotate);
 
@@ -104,15 +104,16 @@ void GameScene::tick(u16 keys) {
     // player loses //
 
     if(player->collidesWith(*ball)){
+        ball->animateToFrame(1);
         if (!engine->isTransitioning()) {
             engine->enqueueSound(ball_open, ball_open_bytes);
-            engine->transitionIntoScene(new EndScene(engine), new FadeOutScene(2));
+            engine->transitionIntoScene(new EndScene(engine), new FadeOutScene(3));
         }
     }
 
     // Music intro //
 
-    if(!playingMusic && (engine->getTimer()->getTotalMsecs() - timeTemp) >= 2325){
+    if(!playingMusic && (engine->getTimer()->getTotalMsecs() - timeTemp) >= 2300){
         engine->enqueueMusic(game_music, game_music_bytes);
         playingMusic = true;
     }
