@@ -74,7 +74,7 @@ void EndScene::tick(u16 keys) {
         timeTemp = engine->getTimer()->getTotalMsecs();
         wiggles++;
     } else if(!playedSound && (engine->getTimer()->getTotalMsecs() - timeTemp) >= 1000){
-        engine->enqueueSound(jingle, jingle_bytes);
+        engine->enqueueMusic(jingle, jingle_bytes);
         ball->stopAnimating();
         ball->animateToFrame(3);
         TextStream::instance().setText("Gotcha!", 1, 11);
