@@ -48,14 +48,11 @@ void GameScene::load() {
             .withLocation(103, 110)
             .buildPtr();
 
-    // start value pokeballs //
-
     ballX = rand() % GBA_SCREEN_WIDTH;
-    gballX = rand() % GBA_SCREEN_WIDTH;
-    //uballX = rand() % GBA_SCREEN_WIDTH;
-    //mballX = rand() % GBA_SCREEN_WIDTH;
 
     // create sprite //
+
+    ballX = rand() % GBA_SCREEN_WIDTH; // randomize x coörd ball
 
     ball = affineBuilder
             .withData(ballTiles, sizeof(ballTiles))
@@ -64,24 +61,30 @@ void GameScene::load() {
             .withVelocity(0, 1)
             .buildPtr();
 
+    ballX = rand() % GBA_SCREEN_WIDTH; // randomize x coörd ball
+
     gball = affineBuilder
             .withData(gballTiles, sizeof(gballTiles))
             .withSize(SIZE_16_16)
-            .withLocation(gballX, 0)
+            .withLocation(ballX, 0)
             .withVelocity(0, 1)
             .buildPtr();
 
-    /*uball = affineBuilder
+    /*    ballX = rand() % GBA_SCREEN_WIDTH; // randomize x coörd ball
+
+    uball = affineBuilder
             .withData(uballTiles, sizeof(uballTiles))
             .withSize(SIZE_16_16)
-            .withLocation(uballX, 0)
+            .withLocation(ballX, 0)
             .withVelocity(0, 1)
             .buildPtr();
 
-    /*mball = affineBuilder
+     ballX = rand() % GBA_SCREEN_WIDTH; // randomize x coörd ball
+
+     mball = affineBuilder
             .withData(mballTiles, sizeof(mballTiles))
             .withSize(SIZE_16_16)
-            .withLocation(mballX, 0)
+            .withLocation(ballX, 0)
             .withVelocity(0, 1)
             .buildPtr();
 */
@@ -99,14 +102,11 @@ void GameScene::load() {
 void GameScene::tick(u16 keys) {
     // ball rotation //
     rotate += 300;
-    rotate1 += 200;
-    //rotate2 += 100;
-    //rotate3 += 100;
 
     ball.get()->rotate(rotate);
-    gball.get()->rotate(rotate1);
-    //uball.get()->rotate(rotate2);
-    //mball.get()->rotate(rotate3);
+    gball.get()->rotate(rotate - 100);
+    //uball.get()->rotate(rotate + 100);
+    //mball.get()->rotate(rotate - 50);
 
     // Player inputs //
     // ---controls--- //
@@ -133,16 +133,16 @@ void GameScene::tick(u16 keys) {
         ball->moveTo(ballX, -10);
     }
     if(gball->getY() >= (GBA_SCREEN_HEIGHT + 50) && gball->getY() > 0) {
-        gballX = rand() % GBA_SCREEN_WIDTH;
-        gball->moveTo(gballX, -10);
+        ballX = rand() % GBA_SCREEN_WIDTH;
+        gball->moveTo(ballX, -10);
     }
     /*if(uball->getY() >= (GBA_SCREEN_HEIGHT + 50) && uball->getY() > 0) {
-        uballX = rand() % GBA_SCREEN_WIDTH;
-        uball->moveTo(uballX, -10);
+        ballX = rand() % GBA_SCREEN_WIDTH;
+        uball->moveTo(ballX, -10);
     }
     /*if(mball->getY() >= (GBA_SCREEN_HEIGHT + 50) && mball->getY() > 0) {
-        mballX = rand() % GBA_SCREEN_WIDTH;
-        mball->moveTo(mballX, -10);
+        ballX = rand() % GBA_SCREEN_WIDTH;
+        mball->moveTo(ballX, -10);
     }
      */
     // player loses //
