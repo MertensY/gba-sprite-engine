@@ -14,6 +14,9 @@ A wild pikachu is born free, but for how long? Some trainer has decided to make 
 #### Project information
 
 This game was developed as part of our bridging programme Electronics and ICT Engineering Technology (pba EA ICT) at Hasselt University. The assignment is a part of the course [Software design with C/C++](https://www.uhasselt.be/studiegids?n=4&t=01&a=2020&i=3433).
+##### Domain model
+A schematic overview of the code can also be found on this repository in the file [DomainModel.pdf](DomainModel.pdf).
+
 
 #### Known bugs and glitches
 
