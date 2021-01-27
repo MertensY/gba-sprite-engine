@@ -143,6 +143,7 @@ void GameScene::tick(u16 keys) {
             // Game over when player collides with ball
             if (player->collidesWith(*ball->getSprite())) {
                 ball->getSprite()->animateToFrame(1);
+                player->animateToFrame(4);
                 engine->enqueueSound(ball_open, ball_open_bytes);
                 engine->transitionIntoScene(new EndScene(engine), new FadeOutScene(1));
             } else {
