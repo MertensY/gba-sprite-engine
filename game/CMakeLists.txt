@@ -12,6 +12,8 @@ add_executable(${PROJECT_NAME}.elf
         src/game_music.h
         src/game_sprites.h
         src/game_back.h
+        src/ball.cpp
+        src/ball.h
         src/end_scene.cpp
         src/end_scene.h
         src/end_music.h

@@ -5,43 +5,44 @@
 #include <libgba-sprite-engine/sprites/affine_sprite.h>
 #include <libgba-sprite-engine/scene.h>
 #include <libgba-sprite-engine/background/background.h>
+#include "ball.h"
 
 class GameScene : public Scene {
 private:
 
-    // pointers //
-
+    // Pointers
     std::unique_ptr<Sprite> player;
-    std::unique_ptr<AffineSprite> ball;
-    std::unique_ptr<AffineSprite> gball;
-    std::unique_ptr<AffineSprite> uball;
-    std::unique_ptr<AffineSprite> mball;
+    std::unique_ptr<Sprite> ballSprite;
+    std::unique_ptr<Sprite> gballSprite;
+    std::unique_ptr<Sprite> uballSprite;
+    std::unique_ptr<Sprite> mballSprite;
     std::unique_ptr<Background> bg;
+    std::vector<std::unique_ptr<Ball>> balls;
+    SpriteBuilder<Sprite> spriteBuilder;
 
-    // variables //
+    // Functions
+    std::unique_ptr<Ball> makeBall();
+    void eraseBalls();
 
-    int ballX;
-    int gballX;
-    int uballX;
-    int mballX;
+    // Variables
     int playerSpeed = 32;
-    int rotate;
+    int ballX = 0;
+    int initBalls = 0;
     int timeTemp;
     bool playingMusic = false;
 
 public:
 
-    // pointers //
-
-    GameScene(std::shared_ptr<GBAEngine> engine) : Scene(engine), ballX(0), gballX(0), uballX(0), mballX(0), playerSpeed(32), rotate(0), timeTemp(0) {}
+    // Constructor
+    GameScene(std::shared_ptr<GBAEngine> engine) : Scene(engine), playerSpeed(32), ballX(0), initBalls(0), timeTemp(0) {}
 
     std::vector<Sprite *> sprites() override;
     std::vector<Background *> backgrounds() override;
 
-    // functions //
-
+    // Functions
     void load() override;
     void tick(u16 keys) override;
+
 };
 
 

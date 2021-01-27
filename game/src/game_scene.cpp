@@ -1,8 +1,10 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <algorithm>
+#include <vector>
 #include <libgba-sprite-engine/sprites/affine_sprite.h>
 #include <libgba-sprite-engine/sprites/sprite_builder.h>
-#include <libgba-sprite-engine/gba/tonc_memmap.h>
+#include <libgba-sprite-engine/gba/tonc_memdef.h>
 #include <libgba-sprite-engine/gba_engine.h>
 #include <libgba-sprite-engine/background/text_stream.h>
 #include <libgba-sprite-engine/effects/fade_out_scene.h>
@@ -12,35 +14,42 @@
 #include "game_sprites.h"
 #include "game_back.h"
 #include "game_music.h"
+#include "ball.h"
 
-    // vector reference //
+#define MAX_BALLS 3
 
 std::vector<Sprite *> GameScene::sprites() {
-    return {
-        player.get(), ball.get(), gball.get()//, uball.get()//, mball.get()
-    };
+    std::vector < Sprite * > sprites;
+    sprites.push_back(player.get());
+    sprites.push_back(ballSprite.get());
+    sprites.push_back(gballSprite.get());
+    sprites.push_back(uballSprite.get());
+    sprites.push_back(mballSprite.get());
+    for (auto &ball : balls) {
+        sprites.push_back(ball->getSprite());
+    }
+
+    return sprites;
 }
 
 std::vector<Background *> GameScene::backgrounds() {
     return {
-        bg.get()
+            bg.get()
     };
 }
 
-    // load foregroundPalette, backgroundPalette //
-
 void GameScene::load() {
+    // Generate random seed
     srand(engine->getTimer()->getTotalMsecs());
 
-    foregroundPalette = std::unique_ptr<ForegroundPaletteManager>(new ForegroundPaletteManager(game_spritesPal, sizeof(game_spritesPal)));
-    backgroundPalette = std::unique_ptr<BackgroundPaletteManager>(new BackgroundPaletteManager(game_backPal, sizeof(game_backPal)));
+    // Set palettes
+    foregroundPalette = std::unique_ptr<ForegroundPaletteManager>(
+            new ForegroundPaletteManager(game_spritesPal, sizeof(game_spritesPal)));
+    backgroundPalette = std::unique_ptr<BackgroundPaletteManager>(
+            new BackgroundPaletteManager(game_backPal, sizeof(game_backPal)));
 
-    SpriteBuilder<Sprite> builder;
-    SpriteBuilder<AffineSprite> affineBuilder;
-
-    // create sprites //
-
-    player = builder
+    // Create sprites
+    player = spriteBuilder
             .withData(walkTiles, sizeof(walkTiles))
             .withSize(SIZE_32_32)
             .withAnimated(4, 4)
@@ -48,74 +57,57 @@ void GameScene::load() {
             .withLocation(103, 110)
             .buildPtr();
 
-    ballX = rand() % GBA_SCREEN_WIDTH;
-
-    // create sprite //
-
-    ballX = rand() % GBA_SCREEN_WIDTH; // randomize x coörd ball
-
-    ball = affineBuilder
+    ballSprite = spriteBuilder
             .withData(ballTiles, sizeof(ballTiles))
             .withSize(SIZE_16_16)
-            .withLocation(ballX, 0)
-            .withVelocity(0, 1)
+            .withLocation(GBA_SCREEN_WIDTH + 20, GBA_SCREEN_HEIGHT + 20)
             .buildPtr();
 
-    ballX = rand() % GBA_SCREEN_WIDTH; // randomize x coörd ball
-
-    gball = affineBuilder
+    gballSprite = spriteBuilder
             .withData(gballTiles, sizeof(gballTiles))
             .withSize(SIZE_16_16)
-            .withLocation(ballX, 0)
-            .withVelocity(0, 1)
+            .withLocation(GBA_SCREEN_WIDTH + 20, GBA_SCREEN_HEIGHT + 20)
             .buildPtr();
 
-    /*    ballX = rand() % GBA_SCREEN_WIDTH; // randomize x coörd ball
-
-    uball = affineBuilder
+    uballSprite = spriteBuilder
             .withData(uballTiles, sizeof(uballTiles))
             .withSize(SIZE_16_16)
-            .withLocation(ballX, 0)
-            .withVelocity(0, 1)
+            .withLocation(GBA_SCREEN_WIDTH + 20, GBA_SCREEN_HEIGHT + 20)
             .buildPtr();
 
-     ballX = rand() % GBA_SCREEN_WIDTH; // randomize x coörd ball
-
-     mball = affineBuilder
+    mballSprite = spriteBuilder
             .withData(mballTiles, sizeof(mballTiles))
             .withSize(SIZE_16_16)
-            .withLocation(ballX, 0)
-            .withVelocity(0, 1)
+            .withLocation(GBA_SCREEN_WIDTH + 20, GBA_SCREEN_HEIGHT + 20)
             .buildPtr();
-*/
-    // create background //
 
-    bg = std::unique_ptr<Background>(new Background(1, game_backTiles, sizeof(game_backTiles), game_backMap, sizeof(game_backMap)));
+    // Create background
+    bg = std::unique_ptr<Background>(
+            new Background(1, game_backTiles, sizeof(game_backTiles), game_backMap, sizeof(game_backMap)));
     bg.get()->useMapScreenBlock(16);
 
-    // create timer //
-
+    // Start intro music
     engine->enqueueMusic(intro, intro_bytes);
+
+    // Set temporary time to current
     timeTemp = engine->getTimer()->getTotalMsecs();
 }
 
 void GameScene::tick(u16 keys) {
-    // ball rotation //
-    rotate += 300;
+    // Music intro
+    if (!playingMusic && (engine->getTimer()->getTotalMsecs() - timeTemp) >= 2300) {
+        engine->enqueueMusic(game_music, game_music_bytes);
+        playingMusic = true;
+    }
 
-    ball.get()->rotate(rotate);
-    gball.get()->rotate(rotate - 100);
-    //uball.get()->rotate(rotate + 100);
-    //mball.get()->rotate(rotate - 50);
+    int prevBallCount = balls.size();
 
-    // Player inputs //
-    // ---controls--- //
-
-    if(keys & KEY_LEFT) {
+    // Player inputs
+    if (keys & KEY_LEFT && !engine->isTransitioning()) {
         player->flipHorizontally(false);
         player->animate();
         player->setVelocity(-2, 0);
-    } else if(keys & KEY_RIGHT) {
+    } else if (keys & KEY_RIGHT && !engine->isTransitioning()) {
         player->flipHorizontally(true);
         player->animate();
         player->setVelocity(+2, 0);
@@ -126,53 +118,76 @@ void GameScene::tick(u16 keys) {
         player->setVelocity(0, 0);
     }
 
-    // In-game events //
+    // Erase balls going off-screen
+    eraseBalls();
 
-    if(ball->getY() >= (GBA_SCREEN_HEIGHT + 50) && ball->getY() > 0) {
-        ballX = rand() % GBA_SCREEN_WIDTH;
-        ball->moveTo(ballX, -10);
+    // Spawn balls
+    if (balls.size() < MAX_BALLS) {
+        if (initBalls >= MAX_BALLS) {
+            balls.push_back(makeBall());
+        } else if ((engine->getTimer()->getTotalMsecs() - timeTemp) >= (1000 * initBalls)) {
+            balls.push_back(makeBall());
+            initBalls++;
+        }
+        prevBallCount = 100;
     }
-    if(gball->getY() >= (GBA_SCREEN_HEIGHT + 50) && gball->getY() > 0) {
-        ballX = rand() % GBA_SCREEN_WIDTH;
-        gball->moveTo(ballX, -10);
-    }
-    /*if(uball->getY() >= (GBA_SCREEN_HEIGHT + 50) && uball->getY() > 0) {
-        ballX = rand() % GBA_SCREEN_WIDTH;
-        uball->moveTo(ballX, -10);
-    }
-    /*if(mball->getY() >= (GBA_SCREEN_HEIGHT + 50) && mball->getY() > 0) {
-        ballX = rand() % GBA_SCREEN_WIDTH;
-        mball->moveTo(ballX, -10);
-    }
-     */
-    // player loses //
 
-    if(player->collidesWith(*ball)){
-        ball->animateToFrame(1);
+    // Update sprites
+    if (prevBallCount != balls.size()) {
+        engine.get()->updateSpritesInScene();
+    }
+
+    //Check all balls
+    for (auto &ball : balls) {
         if (!engine->isTransitioning()) {
-            engine->enqueueSound(ball_open, ball_open_bytes);
-            engine->transitionIntoScene(new EndScene(engine), new FadeOutScene(3));
+            // Game over when player collides with ball
+            if (player->collidesWith(*ball->getSprite())) {
+                ball->getSprite()->animateToFrame(1);
+                engine->enqueueSound(ball_open, ball_open_bytes);
+                engine->transitionIntoScene(new EndScene(engine), new FadeOutScene(1));
+            } else {
+                // Move ball
+                ball->tick();
+            }
         }
     }
-    if(player->collidesWith(*gball)){
-        gball->animateToFrame(1);
-        if (!engine->isTransitioning()) {
-            engine->enqueueSound(ball_open, ball_open_bytes);
-            engine->transitionIntoScene(new EndScene(engine), new FadeOutScene(3));
-        }
-    }
-    /*if(player->collidesWith(*uball)){
-        uball->animateToFrame(1);
-        if (!engine->isTransitioning()) {
-            engine->enqueueSound(ball_open, ball_open_bytes);
-            engine->transitionIntoScene(new EndScene(engine), new FadeOutScene(3));
-        }
-    }*/
+}
 
-    // Music intro //
+std::unique_ptr <Ball> GameScene::makeBall() {
+    // Randomise x coordinate of ball
+    ballX = (rand() % GBA_SCREEN_WIDTH + 16) - 16;
 
-    if(!playingMusic && (engine->getTimer()->getTotalMsecs() - timeTemp) >= 2300){
-        engine->enqueueMusic(game_music, game_music_bytes);
-        playingMusic = true;
+    // Randomise type of ball
+    switch (rand() % 4) {
+        case 1:
+            return std::unique_ptr<Ball>(new Ball(
+                    spriteBuilder
+                            .withLocation(ballX, 0)
+                            .buildWithDataOf(*gballSprite.get())));
+            break;
+        case 2:
+            return std::unique_ptr<Ball>(new Ball(
+                    spriteBuilder
+                            .withLocation(ballX, 0)
+                            .buildWithDataOf(*uballSprite.get())));
+            break;
+        case 3:
+            return std::unique_ptr<Ball>(new Ball(
+                    spriteBuilder
+                            .withLocation(ballX, 0)
+                            .buildWithDataOf(*mballSprite.get())));
+            break;
+        default:
+            return std::unique_ptr<Ball>(new Ball(
+                    spriteBuilder
+                            .withLocation(ballX, 0)
+                            .buildWithDataOf(*ballSprite.get())));
+            break;
     }
+}
+
+void GameScene::eraseBalls() {
+    balls.erase(
+            std::remove_if(balls.begin(), balls.end(),
+                           [](std::unique_ptr <Ball> &ball) { return ball->isOffScreen(); }), balls.end());
 }
