@@ -27,7 +27,7 @@ Yoni Mertens [(MertensY)](https://github.com/MertensY)
 
 #### Sources
 
-This project is forked from [wgroeneveld / gba-sprite-engine](https://github.com/wgroeneveld/gba-sprite-engine/#a-high-level-object-oriented-gameboy-advance-sprite-engine-library)
+This project is forked from [wgroeneveld / gba-sprite-engine](https://github.com/wgroeneveld/gba-sprite-engine/#a-high-level-object-oriented-gameboy-advance-sprite-engine-library), parts the demo code that was available have been reused for the purposes of creating our game.
 
 All Sprites, backgrounds and sounds, as well as Pokémon itself are property of Nintendo and the Pokémon company.
 
